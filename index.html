@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Share</title>
+</head>
+<body style="text-align:center; font-family:Arial;">
+
+<h2>📍 Location Access</h2>
+<p>Kya aap location share karna chahte ho?</p>
+
+<button onclick="start()">Yes, Share Location</button>
+
+<p id="status"></p>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCsCphA9_GvIQH-c_eerGiS5nrw-gMF8RU",
+  authDomain: "mapping-32c20.firebaseapp.com",
+  databaseURL: "https://mapping-32c20-default-rtdb.firebaseio.com/",
+  projectId: "mapping-32c20",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ID
+const params = new URLSearchParams(window.location.search);
+let id = params.get("id");
+
+if (!id) {
+  id = Math.random().toString(36).substring(2);
+  window.location.href = "?id=" + id;
+}
+
+window.start = function () {
+  document.getElementById("status").innerText = "Sharing started...";
+
+  navigator.geolocation.watchPosition((pos) => {
+    set(ref(db, "locations/" + id), {
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude
+    });
+  });
+}
+</script>
+
+</body>
+</html>locut
